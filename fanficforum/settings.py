@@ -28,7 +28,8 @@ INSTALLED_APPS = (
     'django.contrib.humanize',
     # 'awards',
     'forum',
-    'reviewblitz'
+    'reviewblitz',
+    'buddies'
 )
 
 MIDDLEWARE = [
