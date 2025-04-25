@@ -7,6 +7,6 @@
   {{ buddies_list }}
 {% else %}
 <p>It doesn't look like you have any buddies! :(</p>
-<p>Why not <a href="...">create one</a>?</p>
+<p>Why not <a href="{% url 'create_buddy' %}">create one</a>?</p>
 {% endif %}
 {% endblock %}
