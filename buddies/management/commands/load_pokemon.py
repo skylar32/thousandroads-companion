@@ -8,27 +8,43 @@ HIGHEST_POKEMON = 1025
 class Command(BaseCommand):
     help = "Loads Pokémon from PokéAPI into the database"
 
+    def add_arguments(self, parser):
+        parser.add_argument("-p", "--pokemon", action="store_true", help="Load Pokémon species")
+        parser.add_argument("-e", "--evolutions", action="store_true", help="Load Pokémon evolution data")
+        parser.add_argument("-x", "--drop-tables", action="store_true", help="Clear tables before loading")
+
     def handle(self, *args, **options):
         pokemon = []
         evos = []
 
-        for entry in pb.pokedex("national").pokemon_entries:
-            mon = entry.pokemon_species
-            pokemon.append(
-                PokemonSpecies(
-                    name=mon.name.title(), dex_no=mon.id, gender=PokemonSpecies.Gender.get_from_ratio(mon.gender_rate)
+        if options["pokemon"]:
+            if options["drop_tables"]:
+                PokemonSpecies.objects.all().delete()
+            for entry in pb.pokedex("national").pokemon_entries:
+                mon = entry.pokemon_species
+                pokemon.append(
+                    PokemonSpecies(
+                        name=mon.name.title(), dex_no=mon.id, gender=PokemonSpecies.Gender.get_from_ratio(mon.gender_rate)
+                    )
                 )
-            )
-            print(f"Loaded {repr(pokemon[-1])}")
-        PokemonSpecies.objects.bulk_create(pokemon)
+                if options["verbosity"]:
+                    print(f"Loaded {repr(pokemon[-1])}")
+            PokemonSpecies.objects.bulk_create(pokemon)
 
-        for c in pb.APIResourceList("evolution-chain").names:
-            evolution_chains = pb.evolution_chain(c).results
-            break  # this is so insanely ungodly and probably a bug,
-                   # but it's the only way i can find to get a complete list of evolution chains!
-        for entry in evolution_chains:
-            evos += self.get_evo_data(entry.chain)
-        PokemonEvolution.objects.bulk_create(pokemon)
+        if options["evolutions"]:
+            if options["drop_tables"]:
+                PokemonEvolution.objects.all().delete()
+
+            for c in pb.APIResourceList("evolution-chain").names:
+                evolution_chains = pb.evolution_chain(c).results
+                break  # this is so insanely ungodly and probably a bug,
+                       # but it's the only way i can find to get a complete list of evolution chains!
+            for entry in evolution_chains:
+                for item in self.get_evo_data(entry.chain):
+                    if options["verbosity"]:
+                            print(f"Loaded {item.base_form.name} -> {item.evolved_form.name}")
+                    evos.append(item)
+            PokemonEvolution.objects.bulk_create(pokemon)
 
     def get_evo_data(self, chain) -> list[PokemonEvolution]:
         result = []
@@ -57,6 +73,5 @@ class Command(BaseCommand):
                     level=evo_details.min_level
                 )
             )
-            print(f"Loaded {base_form.name} -> {evolved_form.name}")
             result += self.get_evo_data(to)
         return result
