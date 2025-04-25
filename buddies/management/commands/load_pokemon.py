@@ -24,7 +24,10 @@ class Command(BaseCommand):
                 mon = entry.pokemon_species
                 pokemon.append(
                     PokemonSpecies(
-                        name=mon.name.title(), dex_no=mon.id, gender=PokemonSpecies.Gender.get_from_ratio(mon.gender_rate)
+                        name=mon.name.title(),
+                        dex_no=mon.id,
+                        gender=PokemonSpecies.Gender.get_from_ratio(mon.gender_rate),
+                        is_basic=mon.evolves_from_species is None
                     )
                 )
                 if options["verbosity"]:
@@ -44,7 +47,7 @@ class Command(BaseCommand):
                     if options["verbosity"]:
                             print(f"Loaded {item.base_form.name} -> {item.evolved_form.name}")
                     evos.append(item)
-            PokemonEvolution.objects.bulk_create(pokemon)
+            PokemonEvolution.objects.bulk_create(evos)
 
     def get_evo_data(self, chain) -> list[PokemonEvolution]:
         result = []

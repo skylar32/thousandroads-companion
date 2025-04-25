@@ -24,6 +24,7 @@ class PokemonSpecies(models.Model):
     name = models.CharField(max_length=32)
     dex_no = models.PositiveSmallIntegerField()
     gender = models.PositiveSmallIntegerField(choices=Gender.choices)
+    is_basic = models.BooleanField()
 
     def __str__(self):
         return self.name
