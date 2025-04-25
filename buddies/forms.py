@@ -1,5 +1,6 @@
 from django import forms
-from buddies.models import Buddy
+from buddies.models import Buddy, PokemonSpecies
+
 
 class BuddyCreationForm(forms.ModelForm):
     class Meta:
@@ -14,3 +15,7 @@ class BuddyCreationForm(forms.ModelForm):
                 )
             )
         }
+
+    def __init__(self, *args, **kwargs):
+        super(BuddyCreationForm, self).__init__(*args, **kwargs)
+        self.fields["species"].queryset = PokemonSpecies.objects.filter(is_basic=True)
