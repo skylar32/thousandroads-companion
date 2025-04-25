@@ -1,3 +1,7 @@
 from django.contrib import admin
+from buddies.models import Buddy
 
-# Register your models here.
+class BuddyAdmin(admin.ModelAdmin):
+    list_display = ['name', 'gender', 'species', 'xp', 'owner', 'fic']
+
+admin.site.register(Buddy, BuddyAdmin)
