@@ -3,6 +3,7 @@ from django.views.generic.base import TemplateView, RedirectView
 from django.contrib.auth.views import LoginView, LogoutView
 from forum.views import VerificationView, RegisterView, EditUserInfoView, ForumObjectLookupView, PasswordResetLookupView, PasswordResetView, CatalogView, CatalogAuthorView, CatalogFicView, CatalogSearchView, CatalogGenreView, CatalogTagView
 from reviewblitz.views import BlitzReviewSubmissionFormView, BlitzReviewApprovalQueueView, BlitzLeaderboardView, BlitzUserView, BlitzHistoryView, BlitzView
+from buddies.views import BuddiesView, CreateBuddyView
 from forum.models import Member, Fic, Chapter
 
 from django.contrib import admin
@@ -35,6 +36,9 @@ urlpatterns = [
     re_path(r'^blitz/leaderboard$', BlitzLeaderboardView.as_view(), name="blitz_leaderboard"),
     re_path(r'^blitz/user$', BlitzUserView.as_view(), name="blitz_user"),
     re_path(r'^blitz/(?P<pk>\d+)/$', BlitzView.as_view(), name="blitz"),
+
+    re_path(r'^buddies/$', BuddiesView.as_view(), name="buddies"),
+    re_path(r'^buddies/create$', CreateBuddyView.as_view()  , name="create_buddy"),
 
     re_path(r'^admin/', admin.site.urls),
 ]

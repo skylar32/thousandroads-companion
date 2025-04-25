@@ -25,6 +25,9 @@ class PokemonSpecies(models.Model):
     dex_no = models.PositiveSmallIntegerField()
     gender = models.PositiveSmallIntegerField(choices=Gender.choices)
 
+    def __str__(self):
+        return self.name
+
     def __repr__(self):
         return f'<PokemonSpecies: #{str(self.dex_no).zfill(4)} {self.name}>'
 

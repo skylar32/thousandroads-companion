@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% load forum_utils %}
+{% block title %}Create a Buddy{% endblock %}
+{% block content %}
+<h1>Voting</h1>
+<form action="{% url 'create_buddy' %}" method="post">
+{% csrf_token %}
+{% include 'form.html' %}
+<p><button type="submit" class="btn btn-primary">Continue</button></p>
+</form>
+{% endblock %}

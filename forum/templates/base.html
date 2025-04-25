@@ -27,6 +27,9 @@
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
+                    {% if 'buddies' in enabled_apps %}
+                    <li><a href="{% url 'buddies' %}">Buddies</a></li>
+                    {% endif %}
                     {% if 'awards' in enabled_apps %}
                     <li{% block active_past_awards %}{% endblock %}><a href="{% url 'past_awards' %}">Past Awards</a></li>
                     {% if phase %}

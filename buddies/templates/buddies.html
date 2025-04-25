@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}Your Party{% endblock %}
+
+{% block content %}
+<h1>Your Party</h1>
+{% if buddies_list %}
+  {{ buddies_list }}
+{% else %}
+<p>It doesn't look like you have any buddies! :(</p>
+<p>Why not <a href="...">create one</a>?</p>
+{% endif %}
+{% endblock %}
